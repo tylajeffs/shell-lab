@@ -20,8 +20,6 @@ int main(int argc, char **argv) {
    //Read in a line using fgets, don't forget to trim the new line at the end
    fgets(buffer, BUFFER_SIZE, stdin);
    
-   printf("string is: %s\n", buffer);
-   
    
    
    //get the first token & add it to the array of tokens
@@ -34,8 +32,11 @@ int main(int argc, char **argv) {
        
        //get the token, add it to the array
        piece = strtok(NULL," ");
-       tokens[num_tokens] = piece;
-       num_tokens++;
+       
+       if(piece != NULL) {
+           tokens[num_tokens] = piece;
+           num_tokens++;
+       }
        
    }
    
