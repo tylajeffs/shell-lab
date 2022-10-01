@@ -49,6 +49,10 @@ int main(int argc, char **argv) {
        printf("Token #%i: %s\n",i, tokens[i]);
    }
 
+
+
+    //if first token is ls, call ls function and then loop back through and ask for more input
+    //if the command doesn't match, create a new process to run the program (g++ test.cpp) (./a.out hello class how are you)
     
     
     return 0;
