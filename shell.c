@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define BUFFER_SIZE 3000
 #define TOKENS_SIZE 50
 
 //functions
 void echoFunc();
+void lsFunc();
 
 //globals
 char buffer[BUFFER_SIZE];
@@ -55,7 +57,6 @@ int main(int argc, char **argv) {
             
             
         
-        
 
         
         //check the user's inputs and do the correct process
@@ -70,6 +71,10 @@ int main(int argc, char **argv) {
             //call the echo function
             echoFunc();
             
+        } else if(strcmp(tokens[0],"ls") == 0) {
+            
+            //call the ls function
+            lsFunc();
         }
         
         
@@ -94,3 +99,12 @@ void echoFunc() {
 
 }
 
+
+//method to list out all the files in the folder
+void lsFunc() {
+    
+    char programName[] = "ls";
+    //make the call to list out all the files 
+    execlp(programName, programName, NULL);
+    
+}
