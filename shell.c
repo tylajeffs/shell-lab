@@ -2,36 +2,21 @@
 #include <stdlib.h>
 #include <string.h>
 
-
-
 #define BUFFER_SIZE 3000
 #define TOKENS_SIZE 50
 
+//functions
+void echoFunc();
+
+//globals
+char buffer[BUFFER_SIZE];
+char *tokens[TOKENS_SIZE];
+int num_tokens = 0;
+char *token_ptr;
+
+
+//main function
 int main(int argc, char **argv) {
-    
-    //arrays
-    char buffer[BUFFER_SIZE];
-    char *tokens[TOKENS_SIZE];
-    
-    //variables
-    int num_tokens = 0;
-    char *token_ptr;
-    
-   
-   
-   
-   //for loop printing out tokens
-   for(int i = 0; i < num_tokens; i++) {
-       
-       printf("Token #%i: %s\n",i, tokens[i]);
-   }
-
-
-    
-    
-    
-    
-    
 
     //if first token is ls, call ls function and then loop back through and ask for more input
     //if the command doesn't match, create a new process to run the program (g++ test.cpp) (./a.out hello class how are you)
@@ -70,21 +55,21 @@ int main(int argc, char **argv) {
             
             
         
-        //check if first token is echo or exit
-        if(strcmp(tokens[0],"echo")) {
-            
-            //call the echo function
-            //echoFunc();
-            
-        }
-
+        
 
         
+        //check the user's inputs and do the correct process
         if((strcmp(tokens[0],"exit")) == 0) {
+            
             //set ex to true so the infinite loop will break
             printf("...exiting while loop...\n");
-            
             ex = 1;
+            
+        } else if(strcmp(tokens[0],"echo") == 0) {
+            
+            //call the echo function
+            echoFunc();
+            
         }
         
         
@@ -99,9 +84,13 @@ int main(int argc, char **argv) {
 
 //method to run the echo function
 //prints out the remaining arguments
-//void echoFunc() {
+void echoFunc() {
     
     //print out the remaining arguments
-    
-//}
+   for(int i = 0; i < num_tokens; i++) {
+       
+       printf("Token #%i: %s\n",i, tokens[i]);
+   }
+
+}
 
