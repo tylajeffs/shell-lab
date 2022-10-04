@@ -3,6 +3,7 @@
 #include <string.h>
 
 
+
 #define BUFFER_SIZE 3000
 #define TOKENS_SIZE 50
 
@@ -17,31 +18,7 @@ int main(int argc, char **argv) {
     char *token_ptr;
     
    
-   //Read in a line using fgets, don't forget to trim the new line at the end
-   fgets(buffer, BUFFER_SIZE, stdin);
    
-   
-   
-   //get the first token & add it to the array of tokens
-   char* piece = strtok(buffer, " ");
-   tokens[0] = piece;
-   num_tokens++;
-   
-   //get the rest of the tokens
-   while(piece != NULL) {
-       
-       //get the token, add it to the array
-       piece = strtok(NULL," ");
-       
-       if(piece != NULL) {
-           tokens[num_tokens] = piece;
-           num_tokens++;
-       }
-       
-   }
-   
-   //put a 0 (null) as the last token in the array
-   tokens[num_tokens] = NULL;
    
    //for loop printing out tokens
    for(int i = 0; i < num_tokens; i++) {
@@ -50,11 +27,81 @@ int main(int argc, char **argv) {
    }
 
 
+    
+    
+    
+    
+    
 
     //if first token is ls, call ls function and then loop back through and ask for more input
     //if the command doesn't match, create a new process to run the program (g++ test.cpp) (./a.out hello class how are you)
     
     
+    //infinite loop to ask user for input - only ends if they type in "exit"
+    int ex = 0;
+    
+    while(ex == 0) {
+        
+        //Read in a line using fgets, don't forget to trim the new line at the end
+        fgets(buffer, BUFFER_SIZE, stdin); //strip off newline
+       
+        buffer[strcspn(buffer, "\n")] = 0;
+       
+        //get the first token & add it to the array of tokens
+        char* piece = strtok(buffer, " ");
+        tokens[0] = piece;
+        num_tokens++;
+       
+        //get the rest of the tokens
+        while(piece != NULL) {
+           
+            //get the token, add it to the array
+            piece = strtok(NULL," ");
+           
+            if(piece != NULL) {
+                tokens[num_tokens] = piece;
+                num_tokens++;
+            }
+           
+        }
+       
+        //put a 0 (null) as the last token in the array
+        tokens[num_tokens] = NULL;
+            
+            
+        
+        //check if first token is echo or exit
+        if(strcmp(tokens[0],"echo")) {
+            
+            //call the echo function
+            //echoFunc();
+            
+        }
+
+
+        
+        if((strcmp(tokens[0],"exit")) == 0) {
+            //set ex to true so the infinite loop will break
+            printf("...exiting while loop...\n");
+            
+            ex = 1;
+        }
+        
+        
+    }
+    
+    
+    
     return 0;
     
 }
+
+
+//method to run the echo function
+//prints out the remaining arguments
+//void echoFunc() {
+    
+    //print out the remaining arguments
+    
+//}
+
