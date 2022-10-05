@@ -14,6 +14,7 @@ void echoFunc();
 void lsFunc();
 void cdFunc();
 void mkdirFunc();
+void rmdirFunc();
 
 //globals
 char buffer[BUFFER_SIZE];
@@ -94,6 +95,11 @@ int main(int argc, char **argv) {
             //call the cd function
             cdFunc();
             
+        } else if(strcmp(tokens[0],"rmdir") == 0) {
+            
+            //call the cd function
+            rmdirFunc();
+            
         }
         
         
@@ -152,3 +158,20 @@ void mkdirFunc() {
         
 }
 
+
+//method to remove a directory
+void rmdirFunc() {
+    
+    int check;
+    check = rmdir(tokens[1]);
+  
+    // check if directory is created or not
+    if (!check)
+        printf("Directory removed\n");
+    else {
+        printf("Unable to remove directory\n");
+        exit(1);
+    }
+      
+    
+}
