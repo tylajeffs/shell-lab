@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
     while(ex == 0) {
         
         //print the current working directory
-        printf("FLOWERCONSOLE: %s", getcwd(s, 100));
+        printf("FLOWERCONSOLE:%s $ ", getcwd(s, 100));
         
         //Read in a line using fgets, don't forget to trim the new line at the end
         fgets(buffer, BUFFER_SIZE, stdin); //strip off newline
