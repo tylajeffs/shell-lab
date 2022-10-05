@@ -20,7 +20,7 @@ char buffer[BUFFER_SIZE];
 char *tokens[TOKENS_SIZE];
 int num_tokens = 0;
 char *token_ptr;
-char directory[] = "flowershell:~environment/shell";
+char s[100];
 
 //main function
 int main(int argc, char **argv) {
@@ -33,6 +33,9 @@ int main(int argc, char **argv) {
     int ex = 0;
     
     while(ex == 0) {
+        
+        //print the current working directory
+        printf("FLOWERCONSOLE: %s", getcwd(s, 100));
         
         //Read in a line using fgets, don't forget to trim the new line at the end
         fgets(buffer, BUFFER_SIZE, stdin); //strip off newline
@@ -83,8 +86,14 @@ int main(int argc, char **argv) {
             
         } else if(strcmp(tokens[0],"mkdir") == 0) {
             
-            //call the ls function
+            //call the mkdir function
             mkdirFunc();
+            
+        } else if(strcmp(tokens[0],"cd") == 0) {
+            
+            //call the cd function
+            cdFunc();
+            
         }
         
         
@@ -121,18 +130,16 @@ void lsFunc() {
 //method to change directory
 void cdFunc() {
 
-    //move into the 
+    // using the command
+    chdir(tokens[1]);
+    
 }
 
 
 //method to make a new folder
 void mkdirFunc() {
     
-    
     int check;
-    //char dirname[] = tokens[1];
-
-  
     check = mkdir(tokens[1],0777);
   
     // check if directory is created or not
