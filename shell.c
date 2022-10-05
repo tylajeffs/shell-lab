@@ -101,12 +101,9 @@ int main(int argc, char **argv) {
             rmdirFunc();
             
         }
-        
-        
     }
     
     return 0;
-    
 }
 
 
@@ -137,7 +134,18 @@ void lsFunc() {
 void cdFunc() {
 
     // using the command
-    chdir(tokens[1]);
+    //chdir(tokens[1]);
+    
+    
+    int check;
+    check = chdir(tokens[1]);
+  
+    // check if directory is created or not
+    if (!check)
+        printf("entered directory\n");
+    else {
+        printf("invalid directory\n");
+    }
     
 }
 
@@ -153,7 +161,6 @@ void mkdirFunc() {
         printf("Directory created\n");
     else {
         printf("Unable to create directory\n");
-        exit(1);
     }
         
 }
@@ -170,7 +177,6 @@ void rmdirFunc() {
         printf("Directory removed\n");
     else {
         printf("Unable to remove directory\n");
-        exit(1);
     }
       
     
