@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
 
 #define BUFFER_SIZE 3000
 #define TOKENS_SIZE 50
@@ -9,13 +12,15 @@
 //functions
 void echoFunc();
 void lsFunc();
+void cdFunc();
+void mkdirFunc();
 
 //globals
 char buffer[BUFFER_SIZE];
 char *tokens[TOKENS_SIZE];
 int num_tokens = 0;
 char *token_ptr;
-
+char directory[] = "flowershell:~environment/shell";
 
 //main function
 int main(int argc, char **argv) {
@@ -75,12 +80,15 @@ int main(int argc, char **argv) {
             
             //call the ls function
             lsFunc();
+            
+        } else if(strcmp(tokens[0],"mkdir") == 0) {
+            
+            //call the ls function
+            mkdirFunc();
         }
         
         
     }
-    
-    
     
     return 0;
     
@@ -108,3 +116,32 @@ void lsFunc() {
     execlp(programName, programName, NULL);
     
 }
+
+
+//method to change directory
+void cdFunc() {
+
+    //move into the 
+}
+
+
+//method to make a new folder
+void mkdirFunc() {
+    
+    
+    int check;
+    //char dirname[] = tokens[1];
+
+  
+    check = mkdir(tokens[1],0777);
+  
+    // check if directory is created or not
+    if (!check)
+        printf("Directory created\n");
+    else {
+        printf("Unable to create directory\n");
+        exit(1);
+    }
+        
+}
+
