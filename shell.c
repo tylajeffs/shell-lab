@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include<sys/wait.h>
+#include<fcntl.h>
 
 
 #define BUFFER_SIZE 3000
@@ -15,6 +17,8 @@ void lsFunc();
 void cdFunc();
 void mkdirFunc();
 void rmdirFunc();
+void execute_normal();
+void execute_redirect();
 
 //globals
 char buffer[BUFFER_SIZE];
@@ -83,6 +87,7 @@ int main(int argc, char **argv) {
         } else if(strcmp(tokens[0],"ls") == 0) {
             
             //call the ls function
+            //FIGURE OUT WHY THIS ISN'T WORKING!!!!!!
             lsFunc();
             
         } else if(strcmp(tokens[0],"mkdir") == 0) {
@@ -100,6 +105,9 @@ int main(int argc, char **argv) {
             //call the cd function
             rmdirFunc();
             
+        } else { //launch process
+            
+            execute_normal();
         }
     }
     
@@ -180,4 +188,68 @@ void rmdirFunc() {
     }
       
     
+}
+
+
+//function to launch a process
+void execute_normal() {
+    
+    pid_t pid;
+    int status;
+    pid = fork();
+    
+    if (pid < 0) {
+        
+        printf("ERROR fork failed\n");
+        exit(1);
+        
+    } else if (pid == 0) {//child thread
+    
+        if (execvp(*tokens, tokens) < 0) {
+            
+            perror("execvp");
+            exit(1);
+        }
+    } else {
+        
+    while (wait(&status) != pid) {} //parent, waits for completion
+    
+    }
+}
+
+
+
+//function to launch a process
+void execute_redirect()
+{
+    pid_t pid;
+    int status;
+    int defout;
+    int fd;
+    pid = fork();
+    
+    
+    if (pid < 0)  {
+        
+    printf("ERROR fork failed\n");
+    exit(1);
+    
+    } else if (pid == 0) { //child thread
+
+    defout = dup(1);
+    fd=open("/home/cslade/cs415/lsout.txt",O_RDWR|O_CREAT,0644);
+    dup2(fd,1);
+    
+        if (execvp(*tokens, tokens) < 0)
+        {
+            perror("execvp");
+            exit(1);
+        }
+        
+    close(fd);
+    
+    } else {
+        
+        while (wait(&status) != pid) {} //parent, waits for completion
+    }
 }
