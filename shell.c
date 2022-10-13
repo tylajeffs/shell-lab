@@ -6,6 +6,9 @@
 #include <sys/stat.h>
 #include<sys/wait.h>
 #include<fcntl.h>
+#include <dirent.h>
+#include <errno.h>
+
 
 
 #define BUFFER_SIZE 3000
@@ -13,7 +16,7 @@
 
 //functions
 void echoFunc();
-void lsFunc();
+int lsFunc(const char *dir,int op_a,int op_l);
 void cdFunc();
 void mkdirFunc();
 void rmdirFunc();
@@ -39,11 +42,16 @@ int main(int argc, char **argv) {
     
     while(ex == 0) {
         
+        //reset stuff
+        num_tokens = 0;
+        memset(tokens, 0, TOKENS_SIZE);
+        
         //print the current working directory
         printf("FLOWERCONSOLE:%s $ ", getcwd(s, 100));
         
         //Read in a line using fgets, don't forget to trim the new line at the end
         fgets(buffer, BUFFER_SIZE, stdin); //strip off newline
+        
        
         buffer[strcspn(buffer, "\n")] = 0;
        
@@ -86,9 +94,8 @@ int main(int argc, char **argv) {
             
         } else if(strcmp(tokens[0],"ls") == 0) {
             
-            //call the ls function
-            //FIGURE OUT WHY THIS ISN'T WORKING!!!!!!
-            lsFunc();
+            lsFunc(".",0,0);
+            
             
         } else if(strcmp(tokens[0],"mkdir") == 0) {
             
@@ -128,13 +135,40 @@ void echoFunc() {
 }
 
 
+
+
+
 //method to list out all the files in the folder
-void lsFunc() {
-    
-    char programName[] = "ls";
-    //make the call to list out all the files 
-    execlp(programName, programName, NULL);
-    
+int lsFunc(const char *dir,int op_a,int op_l)
+{
+	//Here we will list the directory
+	struct dirent *d;
+	DIR *dh = opendir(dir);
+	if (!dh)
+	{
+		if (errno = ENOENT)
+		{
+			//If the directory is not found
+			perror("Directory doesn't exist");
+		}
+		else
+		{
+			//If the directory is not readable then throw error and exit
+			perror("Unable to read directory");
+		}
+		exit(EXIT_FAILURE);
+	}
+	//While the next entry is not readable we will print directory files
+	while ((d = readdir(dh)) != NULL)
+	{
+		//If hidden files are found we continue
+		if (!op_a && d->d_name[0] == '.')
+			continue;
+		printf("%s  ", d->d_name);
+		if(op_l) printf("\n");
+	}
+	if(!op_l)
+	printf("\n");
 }
 
 
@@ -148,7 +182,7 @@ void cdFunc() {
     int check;
     check = chdir(tokens[1]);
   
-    // check if directory is created or not
+    // check if you can go into the directory
     if (!check)
         printf("entered directory\n");
     else {
@@ -161,11 +195,11 @@ void cdFunc() {
 //method to make a new folder
 void mkdirFunc() {
     
-    int check;
-    check = mkdir(tokens[1],0777);
-  
+    int c;
+    c = mkdir(tokens[1],0777);
+ 
     // check if directory is created or not
-    if (!check)
+    if (!c)
         printf("Directory created\n");
     else {
         printf("Unable to create directory\n");
@@ -198,12 +232,12 @@ void execute_normal() {
     int status;
     pid = fork();
     
-    if (pid < 0) {
+    if(pid < 0) {
         
         printf("ERROR fork failed\n");
         exit(1);
         
-    } else if (pid == 0) {//child thread
+    } else if(pid == 0) {//child thread
     
         if (execvp(*tokens, tokens) < 0) {
             
@@ -212,7 +246,7 @@ void execute_normal() {
         }
     } else {
         
-    while (wait(&status) != pid) {} //parent, waits for completion
+    while(wait(&status) != pid) {} //parent, waits for completion
     
     }
 }
@@ -220,8 +254,7 @@ void execute_normal() {
 
 
 //function to launch a process
-void execute_redirect()
-{
+void execute_redirect() {
     pid_t pid;
     int status;
     int defout;
